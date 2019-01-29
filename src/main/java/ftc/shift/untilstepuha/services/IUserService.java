@@ -16,5 +16,5 @@ public interface IUserService extends IService {
 
     List<User> provideUsers();
 
-    void changeUserBalance(String id, double delta) throws UnacceptableDeltaException;
+    void changeUserBalance(String id, double delta, boolean changeKarma) throws UnacceptableDeltaException;
 }

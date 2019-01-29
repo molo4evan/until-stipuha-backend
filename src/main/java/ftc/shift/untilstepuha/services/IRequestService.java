@@ -11,7 +11,7 @@ public interface IRequestService extends IService {
 
     List<Request> provideRequestsByUserID(String userID);
 
-    void createRequest(Request request);
+    Request createRequest(Request request);
 
     Double donate(String requestID, double payment);    //null if no request
 
