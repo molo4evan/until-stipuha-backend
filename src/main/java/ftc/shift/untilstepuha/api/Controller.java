@@ -4,8 +4,7 @@ import ftc.shift.untilstepuha.exceptions.UnacceptableDeltaException;
 import ftc.shift.untilstepuha.exceptions.WrongPasswordException;
 import ftc.shift.untilstepuha.models.db.Request;
 import ftc.shift.untilstepuha.models.db.User;
-import ftc.shift.untilstepuha.models.dto.DonateInfo;
-import ftc.shift.untilstepuha.models.dto.LoginInfo;
+import ftc.shift.untilstepuha.models.dto.*;
 import ftc.shift.untilstepuha.services.IRequestService;
 import ftc.shift.untilstepuha.services.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,23 +43,27 @@ public class Controller {
 
     //2
     @PostMapping(REQUESTS_PATH)
-    public ResponseEntity<Request> createRequest(@RequestBody Request request,  @RequestHeader(value = "WWW-Authenticate") String token) {
+    public ResponseEntity<Request> createRequest(@RequestBody RequestCreation request,  @RequestHeader(value = "WWW-Authenticate") String token) {
         User user = userService.provideUserByToken(token);
         if( null != user) {
-            Request result = requestService.createRequest(request);
+            Request result = requestService.createRequest(new Request(null, request.getName(), request.getDescription(), user.getId(), request.getValue(), 0));
             return ResponseEntity.ok(result);
         }
         return ResponseEntity.notFound().build();
     }
 
     //3
-    @GetMapping(USERS_PATH)
-    public  ResponseEntity<Collection<Request>> getRequestsByUserId(@RequestParam("userId") String userId){
-        if(null == userService.provideUserByID(userId)){
-            return ResponseEntity.notFound().build();
+    @GetMapping(REQUESTS_PATH)
+    public  ResponseEntity<Collection<Request>> getRequestsByUserId(@RequestParam(value = "userId", required = false) String userId){
+        if (userId == null) {
+            return requests();
+        } else {
+            if(null == userService.provideUserByID(userId)){
+                return ResponseEntity.notFound().build();
+            }
+            Collection<Request> requests = requestService.provideRequestsByUserID(userId);
+            return ResponseEntity.ok(requests);
         }
-        Collection<Request> requests = requestService.provideRequestsByUserID(userId);
-        return ResponseEntity.ok(requests);
     }
 
     //4
@@ -82,8 +85,8 @@ public class Controller {
             return ResponseEntity.notFound().build();
         }
         if( user.getBalance() >= donate){
-            Double result = requestService.donate(id, donate);
             try {
+                Double result = requestService.donate(id, donate);
                 userService.changeUserBalance(user.getId(), -result, true);
             } catch (UnacceptableDeltaException e) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -94,26 +97,26 @@ public class Controller {
 
     //6
     @GetMapping(USERS_PATH)
-    public ResponseEntity<Collection<User>> users(){
+    public ResponseEntity<Collection<OtherUserInfo>> users(){
         Collection<User> users = userService.provideUsers();
-        Collection<User> result = new ArrayList<>();
+        Collection<OtherUserInfo> result = new ArrayList<>();
         for(User user : users){
-            result.add(new User(user.getId(), user.getName(), user.getKarma(), user.getMaxRequest()));
+            result.add(new OtherUserInfo(user.getId(), user.getName(), user.getKarma(), user.getMaxRequest()));
         }
         return ResponseEntity.ok(result);
     }
 
     //7
     @GetMapping(USERS_PATH + "/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable String id, @RequestHeader(value = "WWW-Authenticate") String token){
+    public ResponseEntity<IUserInfo> getUserById(@PathVariable String id, @RequestHeader(value = "WWW-Authenticate") String token){
         User user = userService.provideUserByID(id);
         if( null == user ){
             return ResponseEntity.notFound().build();
         }
         if ( user.getToken().equals(token)){
-            ResponseEntity.ok(user);
+            return ResponseEntity.ok(new MyUserInfo(user.getId(), user.getName(), user.getKarma(), user.getMaxRequest(), user.getBalance()));
         }
-        return  ResponseEntity.ok(new User(user.getId(), user.getName(), user.getKarma(), user.getMaxRequest()));
+        return ResponseEntity.ok(new OtherUserInfo(user.getId(), user.getName(), user.getKarma(), user.getMaxRequest()));
     }
 
     //8
@@ -122,7 +125,10 @@ public class Controller {
         User user = userService.provideUserByToken(token);
         if( null != user){
             Request request = requestService.provideRequest(id);
-            if ( null != request && user.getId().equals(request.getAuthorID())){
+            if (null == request) {
+                return ResponseEntity.notFound().build();
+            }
+            if (user.getId().equals(request.getAuthorID())){
                Double money = requestService.deleteRequest(id);
                 try {
                     userService.changeUserBalance(user.getId(), money, true);
@@ -131,7 +137,7 @@ public class Controller {
                 }
             }
             else{
-                return ResponseEntity.notFound().build();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
             }
         }
 
@@ -153,8 +159,7 @@ public class Controller {
     }
 
     //10
-    @GetMapping(REQUESTS_PATH)
-    public ResponseEntity<Collection<Request>> requests() {
+    private ResponseEntity<Collection<Request>> requests() {
         Collection<Request> requests = requestService.provideRequests();
         return ResponseEntity.ok(requests);
     }

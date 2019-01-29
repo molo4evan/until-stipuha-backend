@@ -1,17 +1,22 @@
 package ftc.shift.untilstepuha.services;
 
+import ftc.shift.untilstepuha.exceptions.UnacceptableDeltaException;
 import ftc.shift.untilstepuha.models.db.Request;
 import ftc.shift.untilstepuha.repositories.IRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
+@Service
 public class RequestService implements IRequestService {
 
     private IRequestRepository requestRepository;
 
     @Autowired
-    public RequestService(IRequestRepository requestRepository){
+    public RequestService(@Qualifier("inMemoryRequestRepository") IRequestRepository requestRepository){
         this.requestRepository = requestRepository;
     }
 
@@ -32,12 +37,25 @@ public class RequestService implements IRequestService {
     }
 
     @Override
-    public void createRequest(Request request) {
-        requestRepository.addRequest(request);
+    public Request createRequest(Request request) {
+        Request realRequest = new Request(
+                UUID.randomUUID().toString(),
+                request.getName(),
+                request.getDescription(),
+                request.getAuthorID(),
+                request.getAim(),
+                0
+        );
+        requestRepository.addRequest(realRequest);
+        return realRequest;
     }
 
     @Override
-    public Double donate(String requestID, double payment) {
+    public Double donate(String requestID, double payment) throws UnacceptableDeltaException {
+        if (payment < 0) {
+            throw new UnacceptableDeltaException();
+        }
+
         Request request = requestRepository.provideRequest(requestID);
         if(request == null){
             return null;

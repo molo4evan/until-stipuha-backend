@@ -5,19 +5,22 @@ import ftc.shift.untilstepuha.exceptions.WrongPasswordException;
 import ftc.shift.untilstepuha.models.db.User;
 import ftc.shift.untilstepuha.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
 public class UserService implements IUserService {
 
-    public IUserRepository userRepository;
+    private IUserRepository userRepository;
 
     private int MAX_MODULE_KARMA = 5;
     private int MAX_DELTA_SUMM = 500;
 
     @Autowired
-    public UserService(IUserRepository userRepository){
+    public UserService(@Qualifier("inMemoryUserRepository") IUserRepository userRepository){
         this.userRepository = userRepository;
     }
 
@@ -86,11 +89,11 @@ public class UserService implements IUserService {
 
     private int changeKarma(int karma, double delta){
         int deltaKarma = (int)delta / MAX_DELTA_SUMM;
-        if (karma + deltaKarma > 5){
-            return 5;
+        if (karma + deltaKarma > MAX_MODULE_KARMA){
+            return MAX_MODULE_KARMA;
         }
-        if (karma + deltaKarma < -5){
-            return 5;
+        if (karma + deltaKarma < -MAX_MODULE_KARMA){
+            return -MAX_MODULE_KARMA;
         }
         return karma;
     }

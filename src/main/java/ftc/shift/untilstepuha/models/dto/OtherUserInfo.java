@@ -9,6 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DonateInfo {
-    String value;
+public class OtherUserInfo implements IUserInfo {
+    private String id;
+    private String name;
+    private int karma;
+    private double maxRequest;
 }

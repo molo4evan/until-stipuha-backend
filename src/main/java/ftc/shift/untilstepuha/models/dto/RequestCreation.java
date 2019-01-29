@@ -7,8 +7,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class DonateInfo {
-    String value;
+@AllArgsConstructor
+public class RequestCreation {
+    private String name;
+    private String description;
+    private double value;
 }
