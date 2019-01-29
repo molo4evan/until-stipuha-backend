@@ -6,16 +6,18 @@ public class User implements Serializable {
     private String id;
     private String token;
     private String name;
+    private String password;
     private int karma;
     private double maxRequest;
     private double balance;
 
     public User(){}
 
-    public User(String id, String token, String name, int karma, double maxRequest, double balance) {
+    public User(String id, String token, String name, String password, int karma, double maxRequest, double balance) {
         this.id = id;
         this.token = token;
         this.name = name;
+        this.password = password;
         this.karma = karma;
         this.maxRequest = maxRequest;
         this.balance = balance;
@@ -67,5 +69,13 @@ public class User implements Serializable {
 
     public void setBalance(double balance) {
         this.balance = balance;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
