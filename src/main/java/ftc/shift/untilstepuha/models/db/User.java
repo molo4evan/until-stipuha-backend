@@ -13,6 +13,13 @@ public class User implements Serializable {
 
     public User(){}
 
+    public User(String id,String name, int karma, double maxRequest){
+        this.id = id;
+        this.name = name;
+        this.karma = karma;
+        this.maxRequest = maxRequest;
+    }
+
     public User(String id, String token, String name, String password, int karma, double maxRequest, double balance) {
         this.id = id;
         this.token = token;
