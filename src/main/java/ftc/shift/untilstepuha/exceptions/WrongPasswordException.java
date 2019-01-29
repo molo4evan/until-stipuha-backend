@@ -1,7 +1,7 @@
 package ftc.shift.untilstepuha.exceptions;
 
 public class WrongPasswordException extends Exception {
-    WrongPasswordException(){
+    public WrongPasswordException(){
         super("Wrong password!");
     }
 }
