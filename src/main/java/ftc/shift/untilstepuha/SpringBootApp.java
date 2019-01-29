@@ -1,34 +1,16 @@
 package ftc.shift.untilstepuha;
-
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+import ftc.shift.untilstepuha.models.db.Request;
+import ftc.shift.untilstepuha.repositories.InMemoryRequestRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.util.UUID;
 
 @SpringBootApplication
 public class SpringBootApp {
     public static void main(String[] args) {
-        try {
-            initFirebase();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return;
-        }
-        SpringApplication.run(SpringBootApp.class, args);
-    }
-
-    private static void initFirebase() throws IOException {
-        FileInputStream serviceAccount = new FileInputStream("firebase-adminsdk.json");
-
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .setDatabaseUrl("https://untilstepuha.firebaseio.com")
-                .build();
-
-        FirebaseApp.initializeApp(options);
+        //SpringApplication.run(SpringBootApp.class, args);
+        InMemoryRequestRepository rep = new InMemoryRequestRepository();
+        rep.addRequest(new Request(UUID.randomUUID().toString(), "request", "it's request", "0", 3000, 228.32));
     }
 }
