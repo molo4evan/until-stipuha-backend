@@ -2,12 +2,14 @@ package ftc.shift.untilstepuha.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ftc.shift.untilstepuha.models.db.User;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.util.*;
 
 @Repository
+@Qualifier("InMemoryRepo")
 public class InMemoryUserRepository implements IUserRepository {
     private Map<String, User> users = new HashMap<>();
 

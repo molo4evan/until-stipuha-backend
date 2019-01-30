@@ -2,12 +2,14 @@ package ftc.shift.untilstepuha.repositories;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ftc.shift.untilstepuha.models.db.Request;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
 import java.util.*;
 
 @Repository
+@Qualifier("InMemoryRepo")
 public class InMemoryRequestRepository implements IRequestRepository {
     private Map<String, Request> requests = new HashMap<>();
 
