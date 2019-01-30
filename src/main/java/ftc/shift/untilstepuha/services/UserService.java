@@ -14,13 +14,13 @@ import java.util.UUID;
 @Service
 public class UserService implements IUserService {
 
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
 
-    private int MAX_MODULE_KARMA = 5;
-    private int MAX_DELTA_SUMM = 500;
+    private int MAX_KARMA_MODULE = 5;
+    private int BALANCE_DELTA = 500;
 
     @Autowired
-    public UserService(@Qualifier("inMemoryUserRepository") IUserRepository userRepository){
+    public UserService(@Qualifier("InMemoryRepo") IUserRepository userRepository){
         this.userRepository = userRepository;
     }
 
@@ -83,17 +83,17 @@ public class UserService implements IUserService {
     }
 
     private double getRequestByKarma(int karma){
-        int coefficient = karma + MAX_MODULE_KARMA;
-        return coefficient * MAX_DELTA_SUMM;
+        int coefficient = karma + MAX_KARMA_MODULE;
+        return coefficient * BALANCE_DELTA;
     }
 
     private int changeKarma(int karma, double delta){
-        int deltaKarma = (int)delta / MAX_DELTA_SUMM;
-        if (karma + deltaKarma > MAX_MODULE_KARMA){
-            return MAX_MODULE_KARMA;
+        int deltaKarma = (int)delta / BALANCE_DELTA;
+        if (karma + deltaKarma > MAX_KARMA_MODULE){
+            return MAX_KARMA_MODULE;
         }
-        if (karma + deltaKarma < -MAX_MODULE_KARMA){
-            return -MAX_MODULE_KARMA;
+        if (karma + deltaKarma < -MAX_KARMA_MODULE){
+            return -MAX_KARMA_MODULE;
         }
         return karma;
     }

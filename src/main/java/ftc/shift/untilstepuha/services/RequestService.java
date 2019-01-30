@@ -16,10 +16,9 @@ public class RequestService implements IRequestService {
     private IRequestRepository requestRepository;
 
     @Autowired
-    public RequestService(@Qualifier("inMemoryRequestRepository") IRequestRepository requestRepository){
+    public RequestService(@Qualifier("H2Repo") IRequestRepository requestRepository){
         this.requestRepository = requestRepository;
     }
-
 
     @Override
     public Request provideRequest(String id) {
@@ -69,6 +68,7 @@ public class RequestService implements IRequestService {
                 return payment - delta;
             } else {
                 request.setBalance(request.getBalance() + payment);
+                requestRepository.updateRequest(request);
                 return payment;
             }
         }
