@@ -1,0 +1,1 @@
+web: java -jar web: java -jar ./build/libs/until-stepuha-backend-1.0.0.RELEASE.jar

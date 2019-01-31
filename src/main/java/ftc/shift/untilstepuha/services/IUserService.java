@@ -2,13 +2,13 @@ package ftc.shift.untilstepuha.services;
 
 
 import ftc.shift.untilstepuha.exceptions.UnacceptableDeltaException;
-import ftc.shift.untilstepuha.exceptions.WrongPasswordException;
+import ftc.shift.untilstepuha.exceptions.CannotAuthenticateException;
 import ftc.shift.untilstepuha.models.db.User;
 
 import java.util.List;
 
 public interface IUserService extends IService {
-    User login(String username, String password)throws WrongPasswordException;
+    User login(String username, String password)throws CannotAuthenticateException;
 
     User provideUserByID(String id);
 

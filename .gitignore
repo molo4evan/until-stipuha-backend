@@ -11,7 +11,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -59,7 +58,6 @@ out/
 
 ### Gradle ###
 .gradle
-/build/
 
 # Ignore Gradle GUI config
 gradle-app.setting
@@ -70,5 +68,10 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-### Gradle Patch ###
-**/build/
+### Database ###
+*.accdb
+*.db
+*.dbf
+*.mdb
+*.pdb
+*.sqlite3
