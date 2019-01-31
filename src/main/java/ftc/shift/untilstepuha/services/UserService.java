@@ -20,7 +20,7 @@ public class UserService implements IUserService {
     private int BALANCE_DELTA = 500;
 
     @Autowired
-    public UserService(@Qualifier("InMemoryRepo") IUserRepository userRepository){
+    public UserService(@Qualifier("H2Repo") IUserRepository userRepository){
         this.userRepository = userRepository;
     }
 
