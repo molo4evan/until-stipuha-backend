@@ -108,7 +108,7 @@ public class Controller {
 
     //7
     @GetMapping(USERS_PATH + "/{id}")
-    public ResponseEntity<IUserInfo> getUserById(@PathVariable String id, @RequestHeader(value = "WWW-Authenticate") String token){
+    public ResponseEntity<IUserInfo> getUserById(@PathVariable String id, @RequestHeader(value = "WWW-Authenticate", required = false) String token){
         User user = userService.provideUserByID(id);
         if( null == user ){
             return ResponseEntity.notFound().build();
