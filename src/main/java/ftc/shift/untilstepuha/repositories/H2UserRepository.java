@@ -25,12 +25,12 @@ public class H2UserRepository implements IUserRepository {
 
     @Override
     public User fetchUserByToken(String token) {
-        return DAO.findByToken(token).orElse(null);
+        return DAO.findFirstByToken(token).orElse(null);
     }
 
     @Override
     public User fetchUserByName(String name) {
-        return DAO.findByName(name).orElse(null);
+        return DAO.findFirstByName(name).orElse(null);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserDAO extends CrudRepository<User, String> {
-    Optional<User> findByToken(String token);
+    Optional<User> findFirstByToken(String token);
 
-    Optional<User> findByName(String name);
+    Optional<User> findFirstByName(String name);
 }
