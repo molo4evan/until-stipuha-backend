@@ -10,6 +10,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'net.ltgt.apt' version '0.10'
+}
+
 apply plugin: 'java'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
@@ -24,6 +28,10 @@ repositories {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
-    implementation 'com.google.firebase:firebase-admin:6.7.0'
+    compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    apt 'org.projectlombok:lombok:1.18.4'
 
+    compile 'com.h2database:h2:1.0.60'
 }
