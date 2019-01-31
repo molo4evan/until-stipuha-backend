@@ -30,7 +30,7 @@ public class UserService implements IUserService {
         username.isEmpty() || password.isEmpty()){
             throw new CannotAuthenticateException();
         }
-        
+
         User user = userRepository.fetchUserByName(username);
 
         if (user != null){
