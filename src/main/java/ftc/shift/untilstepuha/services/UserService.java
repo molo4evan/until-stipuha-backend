@@ -1,7 +1,7 @@
 package ftc.shift.untilstepuha.services;
 
 import ftc.shift.untilstepuha.exceptions.UnacceptableDeltaException;
-import ftc.shift.untilstepuha.exceptions.WrongPasswordException;
+import ftc.shift.untilstepuha.exceptions.CannotAuthenticateException;
 import ftc.shift.untilstepuha.models.db.User;
 import ftc.shift.untilstepuha.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +25,19 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User login(String username, String password) throws WrongPasswordException {
+    public User login(String username, String password) throws CannotAuthenticateException {
+        if (username == null || password == null ||
+        username.isEmpty() || password.isEmpty()){
+            throw new CannotAuthenticateException();
+        }
+        
         User user = userRepository.fetchUserByName(username);
 
         if (user != null){
             if(user.getPassword().equals(password)){
                 return user;
             } else {
-                throw new WrongPasswordException();
+                throw new CannotAuthenticateException();
             }
         } else {
             user = new User(UUID.randomUUID().toString(),

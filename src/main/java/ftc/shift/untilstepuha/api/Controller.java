@@ -1,7 +1,7 @@
 package ftc.shift.untilstepuha.api;
 
 import ftc.shift.untilstepuha.exceptions.UnacceptableDeltaException;
-import ftc.shift.untilstepuha.exceptions.WrongPasswordException;
+import ftc.shift.untilstepuha.exceptions.CannotAuthenticateException;
 import ftc.shift.untilstepuha.models.db.Request;
 import ftc.shift.untilstepuha.models.db.User;
 import ftc.shift.untilstepuha.models.dto.*;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collection;
 
+@CrossOrigin
 @RestController
 public class Controller {
 
@@ -35,7 +36,7 @@ public class Controller {
         User newUser;
         try {
             newUser = userService.login(user.getName(), user.getPassword());
-        } catch (WrongPasswordException e) {
+        } catch (CannotAuthenticateException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         return ResponseEntity.ok(new LoginInfo(newUser.getId(), newUser.getToken()));
